@@ -13,5 +13,4 @@ zephyr_library_named(mbedtls-original)
 zephyr_library_sources(PRIVATE
   ${mbedtls_sources})
 zephyr_library_include_directories(PUBLIC
-  ${ZEPHYR_CURRENT_MODULE_DIR}/include
-  ${ZEPHYR_CURRENT_MODULE_DIR}/library)
+  ${ZEPHYR_CURRENT_MODULE_DIR}/include)
