@@ -5,12 +5,36 @@ find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 # project name
 project(mbedtls-original)
 
-file(GLOB mbedtls_sources
-  ${ZEPHYR_CURRENT_MODULE_DIR}/library/*.c)
+# module's dependencies
+set(${PROJECT_NAME}_CONSUMERS
+  "ctappsa")
+set(${PROJECT_NAME}_LIBRARIES)
 
-# library name
-zephyr_library_named(mbedtls-original)
-zephyr_library_sources(PRIVATE
-  ${mbedtls_sources})
-zephyr_library_include_directories(PUBLIC
-  ${ZEPHYR_CURRENT_MODULE_DIR}/include)
+# if compiling current project directly, ZEPHYR_CURRENT_MODULE_DIR must set manually,
+# otherwise, current project will be compiled as libraries, ZEPHYR_CURRENT_MODULE_DIR will set automatically
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+  set(ZEPHYR_CURRENT_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+endif()
+
+get_filename_component(CMAKE_SOURCE_NAME ${CMAKE_SOURCE_DIR} NAME)
+if((${CMAKE_SOURCE_NAME} STREQUAL ${PROJECT_NAME}) OR
+   (${CMAKE_SOURCE_NAME} IN_LIST ${PROJECT_NAME}_CONSUMERS))
+
+  file(GLOB ${PROJECT_NAME}_SOURCES
+    ${ZEPHYR_CURRENT_MODULE_DIR}/src/*.c)
+
+  # library name
+  if(TARGET ${PROJECT_NAME})
+    set(ZEPHYR_CURRENT_LIBRARY ${PROJECT_NAME})
+  else()
+    zephyr_library_named(${PROJECT_NAME})
+  endif()
+
+  zephyr_library_sources(PRIVATE
+    ${${PROJECT_NAME}_SOURCES})
+  zephyr_library_include_directories(PUBLIC
+    ${ZEPHYR_CURRENT_MODULE_DIR}/include)
+  zephyr_library_link_libraries(PUBLIC
+    ${${PROJECT_NAME}_LIBRARIES})
+
+endif()
