@@ -1,0 +1,8 @@
+config MBEDTLS_ORIGINAL
+	bool "enable mbedtls-original module"
+    default n
+	help
+	  Enable mbedtls-original module as a dependence in your project.
+
+if MBEDTLS_ORIGINAL
+endif # MBEDTLS_ORIGINAL
