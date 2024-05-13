@@ -17,7 +17,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
 endif()
 
 file(GLOB ${PROJECT_NAME}_SOURCES
-  ${ZEPHYR_CURRENT_MODULE_DIR}/src/*.c)
+  ${ZEPHYR_CURRENT_MODULE_DIR}/library/*.c)
 
 # library name
 if(TARGET ${PROJECT_NAME})
@@ -29,7 +29,9 @@ endif()
 zephyr_library_sources(PRIVATE
   ${${PROJECT_NAME}_SOURCES})
 zephyr_library_include_directories(PUBLIC
-  ${ZEPHYR_CURRENT_MODULE_DIR}/include)
+  ${ZEPHYR_CURRENT_MODULE_DIR}/include
+  ${ZEPHYR_CURRENT_MODULE_DIR}/library)
+
 zephyr_library_link_libraries(PUBLIC
   ${${PROJECT_NAME}_LIBRARIES})
 
